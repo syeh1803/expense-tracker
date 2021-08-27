@@ -29,7 +29,7 @@
             </div>
             <div class="col-auto amount mr-4">{{this.amount}}</div>
             <a class="btn btn-dark" href="">修改</a>
-            <form action="/record/{{this._id}}" style="display: inline;">
+            <form action="./records/{{this._id}}" style="display: inline;">
                 <button class="btn btn-danger ml-1" type="submit">刪除</button>
             </form>
         </li>
@@ -37,5 +37,5 @@
     </ul>
 </div>
 <div class="d-flex justify-content-center mt-4">
-    <a class="btn btn-info" href="">新增支出</a>
+    <a class="btn btn-info" href="./records/new">新增支出</a>
 </div>

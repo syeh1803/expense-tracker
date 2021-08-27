@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="d-flex justify-content-center mt-4">
+        <small class="mt-2 mr-5 text-danger">*必填欄位</small>
+        <h4>請輸入你的支出</h4>
+    </div>
+    <form action="/records" method="POST" id="form">
+        <div class="form-group row justify-content-center mt-4">
+            <label for="name" class="col-sm-1 col-form-label">名稱 <span class="text-danger">*</span> :</label>
+            <div class="col-sm-2 px-2">
+                <input type="text" class="form-control" name="name" id="name" required>
+            </div>
+        </div>
+        <div class="form-group row justify-content-center mt-4">
+            <label for="date" class="col-sm-1 col-form-label">日期 <span class="text-danger">*</span> :</label>
+            <div class="col-sm-2 px-2">
+                <input type="date" class="form-control" name="date" id="date" required>
+            </div>
+        </div>
+        <div class="form-group row justify-content-center mt-4">
+            <label for="date" class="col-sm-1 col-form-label">類別 <span class="text-danger">*</span> :</label>
+            <div class="col-sm-2 px-2">
+                <select name="category" class="custom-select" id="category" required>
+                    <option selected>Select</option>
+                    <option value="1">家居物業</option>
+                    <option value="2">交通出行</option>
+                    <option value="3">休閒娛樂</option>
+                    <option value="4">餐飲食品</option>
+                    <option value="5">其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row justify-content-center mt-4">
+            <label for="amount" class="col-sm-1 col-form-label">金額 <span class="text-danger">*</span> :</label>
+            <div class="col-sm-2 px-2">
+                <input type="text" class="form-control" name="amount" id="amount" min="0" required>
+            </div>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center ml-5">
+            <button class="btn btn-outline-dark px-5" type="submit">新增支出</button>
+        </div>
+    </form>
+</div>

@@ -28,6 +28,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// render homepage
 app.get('/', (req, res) => {
   Record.find()
   .lean()
@@ -58,6 +59,32 @@ app.get('/', (req, res) => {
     })
     res.render('index', {record, totalAmount})
   })
+  .catch((error) => console.error(error))
+})
+
+// render new page
+app.get('/records/new', (req, res) => {
+  return res.render('new')
+})
+
+// Create function
+app.post('/records', (req, res) => {
+  // 從req.body拿出這些資料
+  const {
+    name,
+    date,
+    category,
+    amount
+  } = req.body
+  // 存進資料庫
+  return Record.create({
+    name,
+    date, 
+    category,
+    amount
+  })
+  // 新增完成後導回首頁
+  .then(() => res.redirect('/'))
   .catch((error) => console.error(error))
 })
 
