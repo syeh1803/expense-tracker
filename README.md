@@ -6,7 +6,7 @@
 
 ► Users can ```create``` a new item for the latest expense
 
-► All information (name, date, category, amount) is required to update the new item to the system
+► All information (name, date, category, amount) is required to add/update the new item to the system
 
 ► Users can ```update/modify``` the expense items
 
