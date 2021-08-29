@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const methodOverride = require('method-override') // 載入method-override
 
-const routes = require('./routes')
+const routes = require('./routes');
+const { proppatch } = require("./routes");
 require('./config/mongoose')
 
 app.engine(
@@ -27,6 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
 app.use(routes)
 
-app.listen(port, () => {
-  console.log(`Express is listening on localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Express is listening on localhost:${PORT}`);
 });

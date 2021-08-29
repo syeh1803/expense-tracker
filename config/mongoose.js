@@ -1,6 +1,7 @@
 const mongoose = require("mongoose"); // 載入mongoose
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/expense";
 // 設定連線到 mongoDB
-mongoose.connect("mongodb://localhost/expense", {
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
