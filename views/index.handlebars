@@ -1,15 +1,16 @@
-<div class="dropdown d-flex justify-content-center mt-3">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        類別
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">家居物業</a>
-        <a class="dropdown-item" href="#">交通出行</a>
-        <a class="dropdown-item" href="#">休閒娛樂</a>
-        <a class="dropdown-item" href="#">餐飲食品</a>
-        <a class="dropdown-item" href="#">其他</a>
-    </div>
+<div class="form-group row justify-content-end mt-3">
+    <form action="/records/filter" class="justify-content-end form-inline">
+        <label for="filter" class="col-sm-1 col-form-label"></label>
+            <select name="filter" class="custom-select" id="filter" required>
+                <option selected>選擇類別</option>
+                <option value="家居物業" {{#if (isEqual record.category "家居物業" )}}selected{{/if}}>家居物業</option>
+                <option value="交通出行" {{#if (isEqual record.category "交通出行" )}}selected{{/if}}>交通出行</option>
+                <option value="休閒娛樂" {{#if (isEqual record.category "休閒娛樂" )}}selected{{/if}}>休閒娛樂</option>
+                <option value="餐飲食品" {{#if (isEqual record.category "餐飲食品" )}}selected{{/if}}>餐飲食品</option>
+                <option value="其他" {{#if (isEqual record.category "其他" )}}selected{{/if}}>其他</option>
+            </select>
+            <button type="submit" class="btn btn-outline-dark ml-2">搜尋</button>
+    </form>
 </div>
 {{! total amount }}
 <div class="totalAmount d-flex justify-content-center align-items-center">
@@ -17,7 +18,7 @@
     <h1 style="display: inline;">{{totalAmount}}</h1>
 </div>
 {{! 支出項目 }}
-<div class="row mt-2">
+<div class="row">
     <div class="col-2"></div>
     <ul class="list-group col-8">
         {{#each record}}

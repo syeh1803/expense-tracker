@@ -6,7 +6,7 @@ const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const Record = require("./models/record"); // 載入Record model
 const CATEGORY = require("./models/category"); // 載入Category icon
-const moment = require('moment') // 載入moment - 轉換日期格式
+const moment = require("moment"); // 載入moment - 轉換日期格式
 
 // 設定連線到 mongoDB
 mongoose.connect("mongodb://localhost/expense", {
@@ -68,7 +68,7 @@ app.get("/", (req, res) => {
             item["icon"] = CATEGORY.other;
         }
         totalAmount += item["amount"];
-        item["date"] = moment(item["date"]).format("YYYY-MM-DD"); 
+        item["date"] = moment(item["date"]).format("YYYY-MM-DD");
       });
       res.render("index", { record, totalAmount });
     })
@@ -104,8 +104,8 @@ app.get("/records/:id/edit", (req, res) => {
   return Record.findById(id) // 查詢資料庫
     .lean()
     .then((record) => {
-      record.date = moment(record.date).format('YYYY-MM-DD')
-      res.render('edit', {record})
+      record.date = moment(record.date).format("YYYY-MM-DD");
+      res.render("edit", { record });
     })
     .catch((error) => console.error(error));
 });
@@ -127,13 +127,48 @@ app.post("/records/:id/edit", (req, res) => {
 });
 
 // Delete function
-app.post('/records/:id/delete', (req, res) => {
-  const id = req.params.id // 取得網址上的id, 查詢使用者想要刪除的record
+app.post("/records/:id/delete", (req, res) => {
+  const id = req.params.id; // 取得網址上的id, 查詢使用者想要刪除的record
   return Record.findById(id) // 查詢成功後, 將資料放進record
     .then((record) => record.remove()) // 刪除該筆資料
     .then(() => res.redirect("/"))
     .catch((error) => console.error(error));
-})
+});
+
+// Filter function
+app.get("/records/filter", (req, res) => {
+  const filter = req.query.filter;
+  if (!filter) {
+    return res.redirect("/");
+  }
+  return Record.find({ category: filter }) // 在資料庫搜尋全部資料的category有沒有等於filter
+    .lean()
+    .then((record) => {
+      let totalAmount = 0;
+      record.forEach((item) => {
+        switch (item.category) {
+          case "家居物業":
+            item["icon"] = CATEGORY.home;
+            break;
+          case "交通出行":
+            item["icon"] = CATEGORY.transportation;
+            break;
+          case "休閒娛樂":
+            item["icon"] = CATEGORY.entertainment;
+            break;
+          case "餐飲食品":
+            item["icon"] = CATEGORY.food;
+            break;
+          default:
+            item["icon"] = CATEGORY.other;
+        }
+        totalAmount += item["amount"];
+        item["date"] = moment(item["date"]).format("YYYY-MM-DD");
+      });
+      res.render("index", { record, totalAmount, filter });
+    })
+    .catch((error) => console.error(error));
+});
 
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`);
