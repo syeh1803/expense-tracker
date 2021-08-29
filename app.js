@@ -103,7 +103,10 @@ app.get("/records/:id/edit", (req, res) => {
   const id = req.params.id; // 先擷取網址上的id
   return Record.findById(id) // 查詢資料庫
     .lean()
-    .then((record) => res.render("edit", { record }))
+    .then((record) => {
+      record.date = moment(record.date).format('YYYY-MM-DD')
+      res.render('edit', {record})
+    })
     .catch((error) => console.error(error));
 });
 
