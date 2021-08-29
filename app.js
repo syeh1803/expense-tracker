@@ -8,6 +8,8 @@ const Record = require("./models/record"); // 載入Record model
 const CATEGORY = require("./models/category"); // 載入Category icon
 const moment = require("moment"); // 載入moment - 轉換日期格式
 
+const methodOverride = require('method-override') // 載入method-override
+
 // 設定連線到 mongoDB
 mongoose.connect("mongodb://localhost/expense", {
   useNewUrlParser: true,
@@ -40,6 +42,7 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
 
 // render homepage
 app.get("/", (req, res) => {
@@ -111,7 +114,7 @@ app.get("/records/:id/edit", (req, res) => {
 });
 
 // Update function
-app.post("/records/:id/edit", (req, res) => {
+app.put("/records/:id", (req, res) => {
   const id = req.params.id;
   const { name, date, category, amount } = req.body;
   return Record.findById(id) // 查詢資料庫
@@ -127,7 +130,7 @@ app.post("/records/:id/edit", (req, res) => {
 });
 
 // Delete function
-app.post("/records/:id/delete", (req, res) => {
+app.delete("/records/:id", (req, res) => {
   const id = req.params.id; // 取得網址上的id, 查詢使用者想要刪除的record
   return Record.findById(id) // 查詢成功後, 將資料放進record
     .then((record) => record.remove()) // 刪除該筆資料
