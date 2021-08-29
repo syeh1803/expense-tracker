@@ -6,6 +6,7 @@ const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const Record = require("./models/record"); // 載入Record model
 const CATEGORY = require("./models/category"); // 載入Category icon
+const moment = require('moment') // 載入moment - 轉換日期格式
 
 // 設定連線到 mongoDB
 mongoose.connect("mongodb://localhost/expense", {
@@ -24,69 +25,103 @@ db.once("open", () => {
   console.log("mongodb connected!");
 });
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine(
+  "handlebars",
+  exphbs({
+    defaultLayout: "main",
+    // 觀摩同學作業
+    // express-handlebars helpers setting - 保留edit page的表單選項
+    helpers: {
+      isEqual: function (a, b) {
+        return a === b;
+      },
+    },
+  })
+);
 app.set("view engine", "handlebars");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // render homepage
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   Record.find()
-  .lean()
-  .then((record) => {
-    let totalAmount = 0
-    record.forEach((item) => {
-      // 觀摩同學的作業
-      // 將icon套用至不同category
-      // switch: 某一個case就切換成該結果
-      switch (item.category) {
-        case "家居物業":
-          item["icon"] = CATEGORY.home;
-          break;
-        case "交通出行":
-          item["icon"] = CATEGORY.transportation;
-          break;
-        case "休閒娛樂":
-          item["icon"] = CATEGORY.entertainment;
-          break;
-        case "餐飲食品":
-          item["icon"] = CATEGORY.food;
-          break;
-        default:
-          item["icon"] = CATEGORY.other;
-      }
-      totalAmount += item['amount']
-      // item['date'] = moment(item.date).format('YYYY-MM-DD') 會一直buffer, 無法拿掉ISO date
+    .lean()
+    .then((record) => {
+      let totalAmount = 0;
+      record.forEach((item) => {
+        // 觀摩同學的作業
+        // 將icon套用至不同category
+        // switch: 某一個case就切換成該結果
+        switch (item.category) {
+          case "家居物業":
+            item["icon"] = CATEGORY.home;
+            break;
+          case "交通出行":
+            item["icon"] = CATEGORY.transportation;
+            break;
+          case "休閒娛樂":
+            item["icon"] = CATEGORY.entertainment;
+            break;
+          case "餐飲食品":
+            item["icon"] = CATEGORY.food;
+            break;
+          default:
+            item["icon"] = CATEGORY.other;
+        }
+        totalAmount += item["amount"];
+        item["date"] = moment(item["date"]).format("YYYY-MM-DD"); 
+      });
+      res.render("index", { record, totalAmount });
     })
-    res.render('index', {record, totalAmount})
-  })
-  .catch((error) => console.error(error))
-})
+    .catch((error) => console.error(error));
+});
 
 // render new page
-app.get('/records/new', (req, res) => {
-  return res.render('new')
-})
+app.get("/records/new", (req, res) => {
+  return res.render("new");
+});
 
 // Create function
-app.post('/records', (req, res) => {
+app.post("/records", (req, res) => {
   // 從req.body拿出這些資料
-  const {
-    name,
-    date,
-    category,
-    amount
-  } = req.body
+  const { name, date, category, amount } = req.body;
   // 存進資料庫
-  return Record.create({
-    name,
-    date, 
-    category,
-    amount
-  })
-  // 新增完成後導回首頁
-  .then(() => res.redirect('/'))
-  .catch((error) => console.error(error))
-})
+  return (
+    Record.create({
+      name,
+      date,
+      category,
+      amount,
+    })
+      // 新增完成後導回首頁
+      .then(() => res.redirect("/"))
+      .catch((error) => console.error(error))
+  );
+});
+
+// render edit page
+app.get("/records/:id/edit", (req, res) => {
+  const id = req.params.id; // 先擷取網址上的id
+  return Record.findById(id) // 查詢資料庫
+    .lean()
+    .then((record) => res.render("edit", { record }))
+    .catch((error) => console.error(error));
+});
+
+// Update function
+app.post("/records/:id/edit", (req, res) => {
+  const id = req.params.id;
+  const { name, date, category, amount } = req.body;
+  return Record.findById(id) // 查詢資料庫
+    .then((record) => {
+      record.name = name;
+      record.date = date;
+      record.category = category;
+      record.amount = amount;
+      return record.save();
+    }) // 若查詢成功，修改後儲存資料
+    .then(() => res.redirect(`/`)) // 若儲存成功導回首頁
+    .catch((error) => console.error(error));
+});
 
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`);
