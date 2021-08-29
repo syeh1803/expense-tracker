@@ -123,6 +123,15 @@ app.post("/records/:id/edit", (req, res) => {
     .catch((error) => console.error(error));
 });
 
+// Delete function
+app.post('/records/:id/delete', (req, res) => {
+  const id = req.params.id // 取得網址上的id, 查詢使用者想要刪除的record
+  return Record.findById(id) // 查詢成功後, 將資料放進record
+    .then((record) => record.remove()) // 刪除該筆資料
+    .then(() => res.redirect("/"))
+    .catch((error) => console.error(error));
+})
+
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`);
 });

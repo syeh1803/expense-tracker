@@ -29,7 +29,7 @@
             </div>
             <div class="col-auto amount mr-4">{{this.amount}}</div>
             <a class="btn btn-dark" href="./records/{{this._id}}/edit">修改</a>
-            <form action="./records/{{this._id}}" style="display: inline;">
+            <form action="./records/{{this._id}}/delete" method="POST" style="display: inline;">
                 <button class="btn btn-danger ml-1" type="submit">刪除</button>
             </form>
         </li>
