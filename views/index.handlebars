@@ -29,8 +29,8 @@
                 <small>{{this.date}}</small>
             </div>
             <div class="col-auto amount mr-4">{{this.amount}}</div>
-            <a class="btn btn-dark" href="./records/{{this._id}}/edit">修改</a>
-            <form action="./records/{{this._id}}?_method=DELETE" method="POST" style="display: inline;">
+            <a class="btn btn-dark" href="/records/{{this._id}}/edit">修改</a>
+            <form action="/records/{{this._id}}?_method=DELETE" method="POST" style="display: inline;">
                 <button class="btn btn-danger ml-1" type="submit">刪除</button>
             </form>
         </li>
@@ -38,5 +38,5 @@
     </ul>
 </div>
 <div class="d-flex justify-content-center mt-4">
-    <a class="btn btn-outline-dark px-5" href="./records/new">新增支出</a>
+    <a class="btn btn-outline-dark px-5" href="/records/new">新增支出</a>
 </div>
